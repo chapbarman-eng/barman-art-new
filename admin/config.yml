@@ -1,0 +1,25 @@
+backend:
+  name: github
+  repo: chapbarman-eng/barman-art-new
+  branch: main
+
+media_folder: "images/products"
+public_folder: "/barman-art-new/images/products"
+
+locale: "fa"
+
+collections:
+  - name: "products"
+    label: "محصولات بارمان"
+    folder: "_products"
+    create: true
+    slug: "{{slug}}"
+    extension: "json"
+    format: "json"
+    fields:
+      - { label: "نام محصول", name: "title", widget: "string" }
+      - { label: "دسته‌بندی", name: "category", widget: "select", options: ["تابلو بوم", "پوستر پارچه‌ای", "پوستر دیواری فتوگلاسه", "استیکر پشت‌چسب‌دار"] }
+      - { label: "قیمت", name: "price", widget: "string", required: false }
+      - { label: "توضیحات", name: "description", widget: "text" }
+      - { label: "تصویر محصول", name: "image", widget: "image" }
+      - { label: "محصول ویژه", name: "featured", widget: "boolean", default: false }
