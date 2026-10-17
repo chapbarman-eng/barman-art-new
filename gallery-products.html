@@ -37,6 +37,7 @@ const sources=[
 const targetPerCategory=50; // هدف مرحله‌ای: ۵۰ محصول واقعی از هر یک از ۵ دسته
 const targetTotal=250;
 let all=[],filtered=[],page=0;const perPage=50;
+const targetCategories=['تابلو بوم مخمل','پوستر پارچه‌ای','پوستر دیواری فتوگلاسه','استیکر پشت‌چسب‌دار','رومیزی مخمل'];
 const money=n=>Number(n||0).toLocaleString('fa-IR')+' تومان';
 function filter(){const q=document.getElementById('q').value.trim().toLowerCase();const c=document.getElementById('cat').value;filtered=all.filter(p=>(c==='all'||p.category===c)&&(!q||String(p.title||'').toLowerCase().includes(q)));page=0;render()}
 function render(){const grid=document.getElementById('grid');grid.innerHTML='';const items=filtered.slice(page*perPage,(page+1)*perPage);
@@ -48,5 +49,5 @@ function render(){const grid=document.getElementById('grid');grid.innerHTML='';c
 document.getElementById('q').addEventListener('input',filter);document.getElementById('cat').addEventListener('change',filter);
 document.getElementById('prev').onclick=()=>{if(page>0){page--;render();window.scrollTo(0,0)}};
 document.getElementById('next').onclick=()=>{if((page+1)*perPage<filtered.length){page++;render();window.scrollTo(0,0)}};
-Promise.all(sources.map(s=>fetch(s.url).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}))).then(arr=>{all=arr.flat().filter(p=>p.active!==false);filtered=all;render()}).catch(e=>{document.getElementById('status').textContent='بارگذاری اطلاعات محصولات انجام نشد: '+e.message});
+Promise.all(sources.map(s=>fetch(s.url).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}))).then(arr=>{const raw=arr.flat().filter(p=>p.active!==false);all=targetCategories.flatMap(cat=>raw.filter(p=>p.category===cat).slice(0,50));filtered=all;document.querySelector('.note').textContent='اطلاعات فعلی شامل محصولات ثبت‌شدهٔ تابلو بوم مخمل و استیکر پشت‌چسب‌دار است؛ از هر دسته حداکثر ۵۰ محصول نمایش داده می‌شود. برای نمایش سه دستهٔ دیگر، اطلاعات واقعی و تصویر محصولات آن‌ها باید اضافه شود. تصویر ساختگی به‌جای عکس محصول نمایش داده نمی‌شود.';render()}).catch(e=>{document.getElementById('status').textContent='بارگذاری اطلاعات محصولات انجام نشد: '+e.message});
 </script></body></html>
