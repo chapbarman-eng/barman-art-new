@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تابلو بوم مخمل | مجتمع چاپ بارمان</title>
+<style>
+:root{--sage:#a8b7a0;--bone:#f8f5ec;--ink:#26352d;--copper:#b67a53}
+*{box-sizing:border-box}body{margin:0;background:var(--bone);color:var(--ink);font-family:Tahoma,Arial,sans-serif}
+header{background:linear-gradient(135deg,#dce4d5,#f8f5ec);padding:28px 16px;text-align:center;border-bottom:1px solid #d8ddcf}
+h1{margin:0 0 8px;font-size:clamp(22px,4vw,34px)}.sub{margin:0;color:#566454}
+main{max-width:1100px;margin:auto;padding:18px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 18px}
+input,select{font:inherit;border:1px solid #d3d8cd;border-radius:12px;background:white;padding:12px;min-width:0}
+input{flex:1;min-width:190px}
+.status{padding:12px;border-radius:12px;background:#fff;border:1px solid #e6e4db;margin:10px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.card{background:white;border:1px solid #e7e4da;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;min-height:170px}
+.name{font-weight:700;line-height:1.8}.meta{font-size:13px;color:#657064}.price{font-weight:700;color:#8c5a38;margin-top:auto}
+button{font:inherit;border:0;border-radius:10px;padding:10px 14px;background:var(--sage);color:#203025;cursor:pointer}
+.pager{display:flex;align-items:center;justify-content:center;gap:12px;margin:20px 0;flex-wrap:wrap}
+a{color:#7b4e31}
+footer{text-align:center;padding:24px;color:#657064}
+</style>
+</head>
+<body>
+<header><h1>تابلو بوم مخمل بارمان</h1><p class="sub">فهرست محصولات مجتمع چاپ بارمان</p></header>
+<main>
+<div class="controls"><input id="q" type="search" placeholder="جست‌وجو بر اساس نام یا کد محصول…"><select id="size"><option value="24">نمایش ۲۴ محصول</option><option value="48">نمایش ۴۸ محصول</option><option value="96">نمایش ۹۶ محصول</option></select></div>
+<div id="status" class="status">در حال بارگذاری فهرست محصولات…</div>
+<div id="grid" class="grid"></div>
+<div class="pager"><button id="prev">قبلی</button><span id="page"></span><button id="next">بعدی</button></div>
+</main>
+<footer>مجتمع چاپ بارمان · <a href="https://www.digikala.com/seller/C6YT6/#products" target="_blank" rel="noopener">ورود به دیجی‌کالا و دیدن محصولات متنوع</a> · <a href="https://www.instagram.com/chap.barman/" target="_blank" rel="noopener">اینستاگرام chap.barman</a></footer>
+<script>
+const DATA_URL='./canvas-products.json';let all=[],filtered=[],page=0;
+const fa=n=>Number(n||0).toLocaleString('fa-IR');
+const q=document.getElementById('q'),size=document.getElementById('size'),grid=document.getElementById('grid'),status=document.getElementById('status');
+function render(){const per=Number(size.value),pages=Math.max(1,Math.ceil(filtered.length/per));page=Math.min(page,pages-1);const items=filtered.slice(page*per,(page+1)*per);grid.innerHTML=items.map(p=>'<article class="card"><div class="name">'+esc(p.title||'تابلو بوم مخمل')+'</div><div class="meta">کد محصول: '+esc(p.digikalaProductCode||p.id||'—')+'</div><div class="meta">ابعاد و مدل طبق عنوان محصول</div><div class="price">'+fa(p.priceToman)+' تومان</div><div class="meta">موجودی ثبت‌شده: '+fa(p.stock)+'</div></article>').join('');status.textContent='تعداد کل محصولات: '+fa(all.length)+' · نتیجهٔ جست‌وجو: '+fa(filtered.length);document.getElementById('page').textContent='صفحه '+fa(page+1)+' از '+fa(pages);document.getElementById('prev').disabled=page===0;document.getElementById('next').disabled=page>=pages-1}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function filter(){const term=q.value.trim().toLocaleLowerCase();filtered=all.filter(p=>!term||String(p.title||'').toLocaleLowerCase().includes(term)||String(p.digikalaProductCode||'').includes(term)||String(p.id||'').includes(term));page=0;render()}
+q.addEventListener('input',filter);size.addEventListener('change',()=>{page=0;render()});document.getElementById('prev').onclick=()=>{page--;render();window.scrollTo(0,0)};document.getElementById('next').onclick=()=>{page++;render();window.scrollTo(0,0)};
+fetch(DATA_URL).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(data=>{all=Array.isArray(data)?data:[];filtered=all;render()}).catch(e=>{status.textContent='بارگذاری محصولات انجام نشد. لطفاً چند دقیقه بعد دوباره تلاش کنید. ('+e.message+')'});
+</script>
+</body></html>
