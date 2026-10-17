@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>محصولات گالری بارمان</title>
+<style>
+:root{--sage:#a8b7a0;--bone:#f8f5ec;--ink:#26352d;--copper:#b67a53}
+*{box-sizing:border-box}body{margin:0;background:var(--bone);color:var(--ink);font-family:Tahoma,Arial,sans-serif}
+header{padding:26px 16px;text-align:center;background:linear-gradient(135deg,#dce4d5,#f8f5ec);border-bottom:1px solid #d8dfd2}
+h1{margin:0 0 8px;font-size:clamp(25px,5vw,40px)}header p{margin:0;line-height:1.9}
+main{max-width:1200px;margin:auto;padding:20px 14px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 20px}
+input,select{font:inherit;padding:12px;border:1px solid #cbd5c5;border-radius:10px;background:#fff;min-width:180px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.card{background:#fff;border:1px solid #e1e4da;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 5px 16px #26352d0b}
+.art{height:150px;display:grid;place-items:center;background:linear-gradient(145deg,#e4e9dd,#f7f2e7);color:#667b68}
+.art span{font-size:42px}.info{padding:13px;display:flex;flex-direction:column;gap:9px;flex:1}
+.title{font-size:14px;line-height:1.9;font-weight:700}.price{font-weight:900;color:#31594a}
+.buy{display:block;text-align:center;padding:10px;border-radius:9px;background:#31594a;color:#fff;text-decoration:none;font-weight:700;margin-top:auto}
+.note{background:#fff8e8;border:1px solid #e5c98f;padding:12px 14px;border-radius:10px;line-height:1.9;margin-bottom:18px}
+#status{padding:16px;text-align:center}.pager{display:flex;justify-content:center;align-items:center;gap:12px;margin:22px}
+button{font:inherit;padding:10px 15px;border:0;border-radius:9px;background:#31594a;color:white}
+</style></head>
+<body>
+<header><h1>پیشنهادهای گالری بارمان</h1><p>محصولات واقعی بارمان با قیمت ثبت‌شده و لینک خرید دیجی‌کالا</p></header>
+<main>
+<div class="note">در این فهرست، نام و قیمت از اطلاعات محصولات فروشگاه خوانده می‌شود. تصویر اختصاصی هر محصول تا زمان افزودن نشانی تصویر اصلی، به‌صورت جایگاه موقت نمایش داده می‌شود؛ تصویر ساختگی به‌عنوان عکس واقعی محصول نشان داده نمی‌شود.</div>
+<div class="controls"><input id="q" placeholder="جست‌وجوی محصول..." aria-label="جست‌وجوی محصول"><select id="cat"><option value="all">همه دسته‌ها</option><option>تابلو بوم مخمل</option><option>استیکر پشت‌چسب‌دار</option></select></div>
+<div id="status">در حال بارگذاری محصولات واقعی…</div><div class="grid" id="grid"></div>
+<div class="pager"><button id="prev">قبلی</button><span id="page"></span><button id="next">بعدی</button></div>
+</main>
+<script>
+const sources=[
+ {url:'./canvas-products.json',category:'تابلو بوم مخمل',icon:'🖼️'},
+ {url:'./stickers-products.json',category:'استیکر پشت‌چسب‌دار',icon:'✦'}
+];
+let all=[],filtered=[],page=0;const perPage=50;
+const money=n=>Number(n||0).toLocaleString('fa-IR')+' تومان';
+function filter(){const q=document.getElementById('q').value.trim().toLowerCase();const c=document.getElementById('cat').value;filtered=all.filter(p=>(c==='all'||p.category===c)&&(!q||String(p.title||'').toLowerCase().includes(q)));page=0;render()}
+function render(){const grid=document.getElementById('grid');grid.innerHTML='';const items=filtered.slice(page*perPage,(page+1)*perPage);
+ document.getElementById('status').textContent=filtered.length?'': 'محصولی با این جست‌وجو پیدا نشد.';
+ items.forEach(p=>{const card=document.createElement('article');card.className='card';const code=p.digikalaProductCode||p.id;const url=code?'https://www.digikala.com/product/dkp-'+encodeURIComponent(code)+'/':'https://www.digikala.com/seller/C6YT6/#products';const icon=p.category==='استیکر پشت‌چسب‌دار'?'✦':'🖼️';card.innerHTML='<div class="art"><span>'+icon+'</span></div><div class="info"><div class="title"></div><div class="price"></div><a class="buy" target="_blank" rel="noopener">مشاهده و خرید در دیجی‌کالا ↗</a></div>';card.querySelector('.title').textContent=p.title||'محصول بارمان';card.querySelector('.price').textContent=money(p.priceToman);card.querySelector('.buy').href=url;grid.appendChild(card)});
+ document.getElementById('page').textContent=filtered.length?('صفحه '+(page+1)+' از '+Math.ceil(filtered.length/perPage)):'';
+ document.getElementById('prev').disabled=page===0;document.getElementById('next').disabled=(page+1)*perPage>=filtered.length;
+}
+document.getElementById('q').addEventListener('input',filter);document.getElementById('cat').addEventListener('change',filter);
+document.getElementById('prev').onclick=()=>{if(page>0){page--;render();window.scrollTo(0,0)}};
+document.getElementById('next').onclick=()=>{if((page+1)*perPage<filtered.length){page++;render();window.scrollTo(0,0)}};
+Promise.all(sources.map(s=>fetch(s.url).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}))).then(arr=>{all=arr.flat().filter(p=>p.active!==false);filtered=all;render()}).catch(e=>{document.getElementById('status').textContent='بارگذاری اطلاعات محصولات انجام نشد: '+e.message});
+</script></body></html>
