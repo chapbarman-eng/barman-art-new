@@ -132,8 +132,8 @@ async function loadRealDigikalaImage(img, code){
     const doc=new DOMParser().parseFromString(html,'text/html');
     let image=doc.querySelector('meta[property="og:image"]')?.content || doc.querySelector('meta[name="twitter:image"]')?.content;
     if(!image){
-      const match=html.match(/https?:\\/\\/[^"'\\s<>]*(?:dkstatics-public\\.digikala\\.com|image\\.digikala\\.com)[^"'\\s<>]+\\.(?:jpg|jpeg|png|webp)/i);
-      if(match) image=match[0];
+      const match=html.match(new RegExp('https?:[^"\\\\s<>]+\\\\.(?:jpg|jpeg|png|webp)','i'));
+      if(match && /digikala\\.com/i.test(match[0])) image=match[0];
     }
     if(image && /^https?:/i.test(image)) img.src=image;
     else img.src=imageFallback;
