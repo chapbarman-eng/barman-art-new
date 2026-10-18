@@ -1,53 +1,126 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>محصولات گالری بارمان</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#a8b7a0">
+<title>پیشنهادهای گالری بارمان | محصولات واقعی</title>
 <style>
-:root{--sage:#a8b7a0;--bone:#f8f5ec;--ink:#26352d;--copper:#b67a53}
-*{box-sizing:border-box}body{margin:0;background:var(--bone);color:var(--ink);font-family:Tahoma,Arial,sans-serif}
-header{padding:26px 16px;text-align:center;background:linear-gradient(135deg,#dce4d5,#f8f5ec);border-bottom:1px solid #d8dfd2}
-h1{margin:0 0 8px;font-size:clamp(25px,5vw,40px)}header p{margin:0;line-height:1.9}
-main{max-width:1200px;margin:auto;padding:20px 14px}
-.controls{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 20px}
-input,select{font:inherit;padding:12px;border:1px solid #cbd5c5;border-radius:10px;background:#fff;min-width:180px}
+:root{--sage:#a8b7a0;--sage-dark:#31594a;--bone:#f8f5ec;--ink:#26352d;--copper:#b67a53;--line:#e1e4da}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bone);color:var(--ink);font-family:Tahoma,Arial,sans-serif;line-height:1.8}
+a{color:inherit}
+header{padding:30px 16px 24px;text-align:center;background:linear-gradient(135deg,#dce4d5,#f8f5ec);border-bottom:1px solid #d8dfd2}
+.brand{font-size:13px;color:#526b59;margin-bottom:6px}
+h1{margin:0 0 8px;font-size:clamp(25px,5vw,40px);line-height:1.5}
+header p{margin:0 auto;max-width:720px}
+.header-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:700;border:1px solid var(--sage-dark)}
+.btn.primary{background:var(--sage-dark);color:#fff}
+.btn.light{background:#fff;color:var(--sage-dark)}
+main{max-width:1200px;margin:auto;padding:22px 14px 34px}
+.trust{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.trust-item{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px;text-align:center}
+.trust-item strong{display:block;color:var(--sage-dark);font-size:14px}
+.trust-item span{font-size:12px;color:#657166}
+.note{background:#fff8e8;border:1px solid #e5c98f;padding:12px 14px;border-radius:10px;line-height:1.9;margin-bottom:18px;font-size:13px}
+.section-title{margin:24px 0 10px;font-size:21px}
+.controls{display:grid;grid-template-columns:2fr repeat(3,minmax(130px,1fr));gap:10px;margin:12px 0 16px}
+input,select{width:100%;font:inherit;padding:12px;border:1px solid #cbd5c5;border-radius:10px;background:#fff;min-width:0;color:var(--ink)}
+input:focus,select:focus{outline:2px solid #a8b7a0;outline-offset:1px}
+.result-line{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:10px 0;color:#526356;font-size:13px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
-.card{background:#fff;border:1px solid #e1e4da;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 5px 16px #26352d0b}
-.art{height:150px;display:grid;place-items:center;background:linear-gradient(145deg,#e4e9dd,#f7f2e7);color:#667b68}
-.art span{font-size:42px}.info{padding:13px;display:flex;flex-direction:column;gap:9px;flex:1}
-.title{font-size:14px;line-height:1.9;font-weight:700}.price{font-weight:900;color:#31594a}
-.buy{display:block;text-align:center;padding:10px;border-radius:9px;background:#31594a;color:#fff;text-decoration:none;font-weight:700;margin-top:auto}
-.note{background:#fff8e8;border:1px solid #e5c98f;padding:12px 14px;border-radius:10px;line-height:1.9;margin-bottom:18px}
-#status{padding:16px;text-align:center}.pager{display:flex;justify-content:center;align-items:center;gap:12px;margin:22px}
-button{font:inherit;padding:10px 15px;border:0;border-radius:9px;background:#31594a;color:white}
-</style></head>
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 5px 16px #26352d0b;transition:transform .18s,box-shadow .18s}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 25px #26352d14}
+.art{height:185px;display:grid;place-items:center;background:linear-gradient(145deg,#e4e9dd,#f7f2e7);color:#667b68;overflow:hidden}
+.art span{font-size:46px}
+.info{padding:13px;display:flex;flex-direction:column;gap:8px;flex:1}
+.title{font-size:14px;line-height:1.9;font-weight:700}
+.price{font-weight:900;color:var(--sage-dark);font-size:17px}
+.meta{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:11px;border-radius:99px;padding:3px 8px;background:#eef2e9;color:#425b48}
+.buy{display:block;text-align:center;padding:10px;border-radius:9px;background:var(--sage-dark);color:#fff;text-decoration:none;font-weight:700;margin-top:auto}
+.buy:hover{background:#244638}
+#status{padding:22px;text-align:center;background:#fff;border-radius:12px;border:1px solid var(--line);margin:12px 0}
+.pager{display:flex;justify-content:center;align-items:center;gap:12px;margin:22px}
+button{font:inherit;padding:10px 15px;border:0;border-radius:9px;background:var(--sage-dark);color:white;cursor:pointer}
+button:disabled{opacity:.4;cursor:not-allowed}
+footer{background:#e8ede3;padding:24px 14px;text-align:center;border-top:1px solid #d8dfd2}
+footer p{margin:4px}
+footer .links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.small{font-size:12px;color:#667367}
+@media(max-width:720px){.trust{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}.controls input{grid-column:1/-1}.art{height:165px}}
+@media(max-width:420px){.controls{grid-template-columns:1fr}.controls input{grid-column:auto}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.art{height:125px}.info{padding:10px}.title{font-size:12px}.price{font-size:14px}.buy{font-size:12px;padding:9px}}
+</style>
+</head>
 <body>
-<header><h1>پیشنهادهای گالری بارمان</h1><p>محصولات واقعی بارمان با قیمت ثبت‌شده و لینک خرید دیجی‌کالا</p></header>
+<header>
+<div class="brand">BARMAN ART HOUSE</div>
+<h1>پیشنهادهای گالری بارمان</h1>
+<p>محصولات ثبت‌شدهٔ بارمان را جست‌وجو کنید، مشخصات را ببینید و برای خرید به صفحهٔ محصول در دیجی‌کالا بروید.</p>
+<div class="header-actions">
+<a class="btn primary" href="https://www.digikala.com/seller/C6YT6/#products" target="_blank" rel="noopener">ورود به سایت دیجی‌کالا و دیدن محصولات متنوع ↗</a>
+<a class="btn light" href="https://www.instagram.com/chap.barman/" target="_blank" rel="noopener">اینستاگرام بارمان</a>
+</div>
+</header>
 <main>
-<div class="note">در این فهرست، نام و قیمت از اطلاعات محصولات فروشگاه خوانده می‌شود. تصویر اختصاصی هر محصول تا زمان افزودن نشانی تصویر اصلی، به‌صورت جایگاه موقت نمایش داده می‌شود؛ تصویر ساختگی به‌عنوان عکس واقعی محصول نشان داده نمی‌شود.</div>
-<div class="controls"><input id="q" placeholder="جست‌وجوی محصول..." aria-label="جست‌وجوی محصول"><select id="cat"><option value="all">همه دسته‌ها</option><option>تابلو بوم مخمل</option><option>پوستر پارچه‌ای</option><option>پوستر دیواری فتوگلاسه</option><option>استیکر پشت‌چسب‌دار</option><option>رومیزی مخمل</option></select></div>
+<section class="trust" aria-label="اطلاعات خرید">
+<div class="trust-item"><strong>اطلاعات محصول</strong><span>نام و قیمت از داده‌های ثبت‌شده خوانده می‌شود</span></div>
+<div class="trust-item"><strong>خرید مطمئن‌تر</strong><span>جزئیات نهایی را در صفحهٔ فروش دیجی‌کالا بررسی کنید</span></div>
+<div class="trust-item"><strong>ارتباط با بارمان</strong><span>۰۹۱۳۱۶۶۴۷۱۵</span></div>
+</section>
+<div class="note">شفافیت مهم است: فقط محصولاتی نمایش داده می‌شوند که اطلاعاتشان در فایل داده موجود است. برای بعضی محصولات، نشانی عکس اختصاصی هنوز در داده‌ها ثبت نشده؛ در این موارد به‌جای عکس ساختگی، جایگاه تصویری موقت نمایش داده می‌شود. قیمت و موجودی ممکن است در دیجی‌کالا تغییر کند؛ پیش از خرید، صفحهٔ فروش را بررسی کنید.</div>
+<h2 class="section-title">محصول مناسب خودتان را پیدا کنید</h2>
+<div class="controls">
+<input id="q" placeholder="جست‌وجوی نام یا کد محصول..." aria-label="جست‌وجوی محصول">
+<select id="cat" aria-label="دسته‌بندی"><option value="all">همهٔ دسته‌های موجود</option><option>تابلو بوم مخمل</option><option>پوستر پارچه‌ای</option><option>پوستر دیواری فتوگلاسه</option><option>استیکر پشت‌چسب‌دار</option><option>رومیزی مخمل</option></select>
+<select id="sort" aria-label="مرتب‌سازی"><option value="default">مرتب‌سازی پیش‌فرض</option><option value="low">ارزان‌ترین</option><option value="high">گران‌ترین</option><option value="name">نام محصول</option></select>
+<select id="size" aria-label="فیلتر اندازه"><option value="all">همهٔ اندازه‌ها</option><option value="30">حدود ۳۰ سانتی‌متر</option><option value="50">حدود ۵۰ سانتی‌متر</option><option value="70">حدود ۷۰ سانتی‌متر</option><option value="100">۱۰۰ سانتی‌متر و بیشتر</option></select>
+</div>
+<div class="result-line"><span id="count">در حال آماده‌سازی محصولات…</span><span>برای قیمت و شرایط نهایی، صفحهٔ خرید را ببینید.</span></div>
 <div id="status">در حال بارگذاری محصولات واقعی…</div><div class="grid" id="grid"></div>
-<div class="pager"><button id="prev">قبلی</button><span id="page"></span><button id="next">بعدی</button></div>
+<div class="pager"><button id="prev" type="button">قبلی</button><span id="page"></span><button id="next" type="button">بعدی</button></div>
 </main>
+<footer>
+<strong>مجتمع چاپ بارمان</strong>
+<p>اطلاعات دقیق محصول و شرایط خرید را در صفحهٔ همان محصول بررسی کنید.</p>
+<div class="links">
+<a class="btn primary" href="https://www.digikala.com/seller/C6YT6/#products" target="_blank" rel="noopener">مشاهده فروشگاه بارمان در دیجی‌کالا ↗</a>
+<a class="btn light" href="tel:09131664715">تماس: ۰۹۱۳۱۶۶۴۷۱۵</a>
+<a class="btn light" href="https://www.instagram.com/chap.barman/" target="_blank" rel="noopener">chap.barman</a>
+</div>
+<p class="small">بارمان؛ اطلاعات روشن، انتخاب آسان‌تر.</p>
+</footer>
 <script>
 const sources=[
  {url:'./canvas-products.json',category:'تابلو بوم مخمل',icon:'🖼️'},
  {url:'./stickers-products.json',category:'استیکر پشت‌چسب‌دار',icon:'✦'}
 ];
-const targetPerCategory=50; // هدف مرحله‌ای: ۵۰ محصول واقعی از هر یک از ۵ دسته
+const targetPerCategory=50;
 const targetTotal=250;
-let all=[],filtered=[],page=0;const perPage=50;
+let all=[],filtered=[],page=0;
+const perPage=24;
 const targetCategories=['تابلو بوم مخمل','پوستر پارچه‌ای','پوستر دیواری فتوگلاسه','استیکر پشت‌چسب‌دار','رومیزی مخمل'];
 const money=n=>Number(n||0).toLocaleString('fa-IR')+' تومان';
-function filter(){const q=document.getElementById('q').value.trim().toLowerCase();const c=document.getElementById('cat').value;filtered=all.filter(p=>(c==='all'||p.category===c)&&(!q||String(p.title||'').toLowerCase().includes(q)));page=0;render()}
+function dimensions(p){const s=String(p.title||'');const matches=[...s.matchAll(/(?:\d{2,3})\s*[×xX*]\s*(\d{2,3})/g)];return matches.length?matches.map(m=>m[0].replace(/x|X|\*/g,'×').replace(/\s/g,'')).join('، '):''}
+function filter(){const q=document.getElementById('q').value.trim().toLocaleLowerCase('fa');const c=document.getElementById('cat').value;const size=document.getElementById('size').value;const sort=document.getElementById('sort').value;
+filtered=all.filter(p=>{const title=String(p.title||'').toLocaleLowerCase('fa');const code=String(p.digikalaProductCode||p.id||'');const d=dimensions(p);const nums=d.match(/\d+/g)||[];const sizeOk=size==='all'||nums.some(n=>size==='100'?Number(n)>=100:Math.abs(Number(n)-Number(size))<=10);return(c==='all'||p.category===c)&&(!q||title.includes(q)||code.includes(q))&&sizeOk});
+if(sort==='low')filtered.sort((a,b)=>Number(a.priceToman||0)-Number(b.priceToman||0));if(sort==='high')filtered.sort((a,b)=>Number(b.priceToman||0)-Number(a.priceToman||0));if(sort==='name')filtered.sort((a,b)=>String(a.title||'').localeCompare(String(b.title||''),'fa'));page=0;render()}
 function render(){const grid=document.getElementById('grid');grid.innerHTML='';const items=filtered.slice(page*perPage,(page+1)*perPage);
- document.getElementById('status').textContent=filtered.length?('نمایش '+Math.min(filtered.length,targetPerCategory)+' محصول در هر صفحه؛ هدف پروژه '+targetTotal+' محصول واقعی از ۵ دسته است.'): 'محصولی با این جست‌وجو پیدا نشد.';
- items.forEach(p=>{const card=document.createElement('article');card.className='card';const code=p.digikalaProductCode||p.id;const url=code?'https://www.digikala.com/product/dkp-'+encodeURIComponent(code)+'/':'https://www.digikala.com/seller/C6YT6/#products';const icon=p.category==='استیکر پشت‌چسب‌دار'?'✦':'🖼️';const image=p.imageUrl||p.image||p.image_url||p.thumbnail||p.mainImage||'';card.innerHTML='<div class="art"><span>'+icon+'</span></div><div class="info"><div class="title"></div><div class="price"></div><a class="buy" target="_blank" rel="noopener">مشاهده و خرید در دیجی‌کالا ↗</a></div>';if(image){const art=card.querySelector('.art');art.innerHTML='';const img=document.createElement('img');img.src=image;img.alt=p.title||'محصول بارمان';img.loading='lazy';img.style.cssText='width:100%;height:100%;object-fit:contain';img.onerror=()=>{art.innerHTML='<span>'+icon+'</span>'};art.appendChild(img)}card.querySelector('.title').textContent=p.title||'محصول بارمان';card.querySelector('.price').textContent=money(p.priceToman);card.querySelector('.buy').href=url;grid.appendChild(card)});
- document.getElementById('page').textContent=filtered.length?('صفحه '+(page+1)+' از '+Math.ceil(filtered.length/perPage)):'';
- document.getElementById('prev').disabled=page===0;document.getElementById('next').disabled=(page+1)*perPage>=filtered.length;
-}
-document.getElementById('q').addEventListener('input',filter);document.getElementById('cat').addEventListener('change',filter);
+document.getElementById('status').style.display=filtered.length?'none':'block';
+document.getElementById('status').textContent=all.length?'با این جست‌وجو محصولی پیدا نشد.':'اطلاعات محصولات بارگذاری نشد؛ لطفاً از لینک فروشگاه دیجی‌کالا استفاده کنید.';
+document.getElementById('count').textContent=filtered.length?('نمایش '+(page*perPage+1)+' تا '+Math.min((page+1)*perPage,filtered.length)+' از '+filtered.length+' محصول'):'۰ محصول';
+items.forEach(p=>{const card=document.createElement('article');card.className='card';const code=p.digikalaProductCode||p.id;const url=code?'https://www.digikala.com/product/dkp-'+encodeURIComponent(code)+'/':'https://www.digikala.com/seller/C6YT6/#products';const icon=p.category==='استیکر پشت‌چسب‌دار'?'✦':'🖼️';const image=p.imageUrl||p.image||p.image_url||p.thumbnail||p.mainImage||'';const dims=dimensions(p);
+card.innerHTML='<div class="art"><span>'+icon+'</span></div><div class="info"><div class="title"></div><div class="meta"><span class="pill category"></span><span class="pill dim"></span></div><div class="price"></div><a class="buy" target="_blank" rel="noopener">مشاهده و خرید در دیجی‌کالا ↗</a></div>';
+if(image){const art=card.querySelector('.art');art.innerHTML='';const img=document.createElement('img');img.src=image;img.alt=p.title||'محصول بارمان';img.loading='lazy';img.style.cssText='width:100%;height:100%;object-fit:contain';img.onerror=()=>{art.innerHTML='<span>'+icon+'</span>'};art.appendChild(img)}
+card.querySelector('.title').textContent=p.title||'محصول بارمان';card.querySelector('.category').textContent=p.category||'محصول بارمان';card.querySelector('.dim').textContent=dims||'اندازه را در صفحهٔ خرید بررسی کنید';card.querySelector('.price').textContent=money(p.priceToman);card.querySelector('.buy').href=url;grid.appendChild(card)});
+document.getElementById('page').textContent=filtered.length?('صفحهٔ '+(page+1)+' از '+Math.ceil(filtered.length/perPage)):'';
+document.getElementById('prev').disabled=page===0;document.getElementById('next').disabled=(page+1)*perPage>=filtered.length}
+['q','cat','sort','size'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',filter));
 document.getElementById('prev').onclick=()=>{if(page>0){page--;render();window.scrollTo(0,0)}};
 document.getElementById('next').onclick=()=>{if((page+1)*perPage<filtered.length){page++;render();window.scrollTo(0,0)}};
-Promise.all(sources.map(s=>fetch(s.url).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}))).then(arr=>{const raw=arr.flat().filter(p=>p.active!==false);all=targetCategories.flatMap(cat=>raw.filter(p=>p.category===cat).slice(0,50));filtered=all;document.querySelector('.note').textContent='اطلاعات فعلی شامل محصولات ثبت‌شدهٔ تابلو بوم مخمل و استیکر پشت‌چسب‌دار است؛ از هر دسته حداکثر ۵۰ محصول نمایش داده می‌شود. برای نمایش سه دستهٔ دیگر، اطلاعات واقعی و تصویر محصولات آن‌ها باید اضافه شود. تصویر ساختگی به‌جای عکس محصول نمایش داده نمی‌شود.';render()}).catch(e=>{document.getElementById('status').textContent='بارگذاری اطلاعات محصولات انجام نشد: '+e.message});
-</script></body></html>
+Promise.all(sources.map(s=>fetch(s.url).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}))).then(arr=>{const raw=arr.flat().filter(p=>p.active!==false);all=targetCategories.flatMap(cat=>raw.filter(p=>p.category===cat).slice(0,targetPerCategory));filter();const present=[...new Set(all.map(p=>p.category))];document.querySelector('.note').textContent='در حال حاضر اطلاعات ثبت‌شده برای این فهرست شامل '+present.join(' و ')+' است. هدف مرحله‌ای پروژه ۲۵۰ محصول واقعی از ۵ دسته است؛ دسته‌هایی که هنوز دادهٔ محصول ندارند، تا دریافت اطلاعات واقعی خالی می‌مانند. عکس ساختگی به‌جای تصویر محصول نمایش داده نمی‌شود.'}).catch(e=>{document.getElementById('status').style.display='block';document.getElementById('status').textContent='بارگذاری اطلاعات محصولات انجام نشد. می‌توانید از لینک فروشگاه بارمان در دیجی‌کالا استفاده کنید.';document.getElementById('count').textContent='محصولات در دسترس نیستند';console.error(e)});
+</script>
+</body>
+</html>
