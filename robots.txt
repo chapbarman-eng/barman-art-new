@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://chapbarman-eng.github.io/barman-art-new/sitemap.xml
