@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#a8b7a0">
+<meta name="description" content="گالری محصولات مجتمع چاپ بارمان؛ جست‌وجو و بررسی محصولات ثبت‌شده و ورود مستقیم به صفحه خرید در دیجی‌کالا.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://chapbarman-eng.github.io/barman-art-new/gallery-products.html">
+<meta property="og:title" content="پیشنهادهای گالری بارمان | محصولات واقعی">
+<meta property="og:description" content="محصولات بارمان را جست‌وجو کنید و برای خرید مستقیم به دیجی‌کالا بروید.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://chapbarman-eng.github.io/barman-art-new/gallery-products.html">
 <title>پیشنهادهای گالری بارمان | محصولات واقعی</title>
 <style>
 :root{--sage:#a8b7a0;--sage-dark:#31594a;--bone:#f8f5ec;--ink:#26352d;--copper:#b67a53;--line:#e1e4da}
@@ -50,6 +57,11 @@ footer{background:#e8ede3;padding:24px 14px;text-align:center;border-top:1px sol
 footer p{margin:4px}
 footer .links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px}
 .small{font-size:12px;color:#667367}
+.related{margin:24px 0;padding:16px;background:#eef2e9;border:1px solid #d8e0d2;border-radius:14px}
+.related h2{margin:0 0 8px;font-size:19px}
+.related-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.related-item{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;text-decoration:none;font-size:13px;font-weight:700}
+.related-item span{display:block;color:#657166;font-size:11px;font-weight:400;margin-top:4px}
 @media(max-width:720px){.trust{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}.controls input{grid-column:1/-1}.art{height:165px}}
 @media(max-width:420px){.controls{grid-template-columns:1fr}.controls input{grid-column:auto}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.art{height:125px}.info{padding:10px}.title{font-size:12px}.price{font-size:14px}.buy{font-size:12px;padding:9px}}
 </style>
@@ -82,6 +94,7 @@ footer .links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin
 <div class="result-line"><span id="count">در حال آماده‌سازی محصولات…</span><span>برای قیمت و شرایط نهایی، صفحهٔ خرید را ببینید.</span></div>
 <div id="status">در حال بارگذاری محصولات واقعی…</div><div class="grid" id="grid"></div>
 <div class="pager"><button id="prev" type="button">قبلی</button><span id="page"></span><button id="next" type="button">بعدی</button></div>
+<section class="related" aria-labelledby="related-title"><h2 id="related-title">شاید این محصولات را هم بپسندید</h2><p class="small">پیشنهادها از میان محصولات ثبت‌شده در همین گالری انتخاب می‌شوند.</p><div id="related-list" class="related-list"><span class="small">پس از بارگذاری محصولات، پیشنهادها نمایش داده می‌شوند.</span></div></section>
 </main>
 <footer>
 <strong>مجتمع چاپ بارمان</strong>
@@ -117,7 +130,9 @@ card.innerHTML='<div class="art"><span>'+icon+'</span></div><div class="info"><d
 if(image){const art=card.querySelector('.art');art.innerHTML='';const img=document.createElement('img');img.src=image;img.alt=p.title||'محصول بارمان';img.loading='lazy';img.style.cssText='width:100%;height:100%;object-fit:contain';img.onerror=()=>{art.innerHTML='<span>'+icon+'</span>'};art.appendChild(img)}
 card.querySelector('.title').textContent=p.title||'محصول بارمان';card.querySelector('.category').textContent=p.category||'محصول بارمان';card.querySelector('.dim').textContent=dims||'اندازه را در صفحهٔ خرید بررسی کنید';card.querySelector('.price').textContent=money(p.priceToman);card.querySelector('.buy').href=url;grid.appendChild(card)});
 document.getElementById('page').textContent=filtered.length?('صفحهٔ '+(page+1)+' از '+Math.ceil(filtered.length/perPage)):'';
-document.getElementById('prev').disabled=page===0;document.getElementById('next').disabled=(page+1)*perPage>=filtered.length}
+document.getElementById('prev').disabled=page===0;document.getElementById('next').disabled=(page+1)*perPage>=filtered.length;
+const rel=document.getElementById('related-list');const related=all.filter(p=>!items.some(x=>String(x.id)===String(p.id))&&(document.getElementById('cat').value==='all'||p.category===document.getElementById('cat').value)).slice(0,4);
+rel.innerHTML=related.length?related.map(p=>{const code=p.digikalaProductCode||p.id;const url=code?'https://www.digikala.com/product/dkp-'+encodeURIComponent(code)+'/':'https://www.digikala.com/seller/C6YT6/#products';return '<a class="related-item" href="'+url+'" target="_blank" rel="noopener">'+String(p.title||'محصول بارمان').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))+'<span>مشاهده در دیجی‌کالا ↗</span></a>'}).join(''):'<span class="small">برای این دسته هنوز محصول مشابه دیگری در داده‌های فعلی ثبت نشده است.</span>'}
 ['q','cat','sort','size'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',filter));
 document.getElementById('prev').onclick=()=>{if(page>0){page--;render();window.scrollTo(0,0)}};
 document.getElementById('next').onclick=()=>{if((page+1)*perPage<filtered.length){page++;render();window.scrollTo(0,0)}};
