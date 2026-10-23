@@ -10,6 +10,32 @@
     "کاغذ دیواری به صورت شیت پوستر": "https://res.cloudinary.com/gimmersta-wallpaper/image/upload/c_fill%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_1200%2Ch_1200/v1731072527/cronos-ha/pages/paper-types/PandS_sample.jpg"
   };
   const norm = s => (s || "").replace(/\u200c/g, " ").replace(/\s+/g, " ").trim();
+  function applyCanvasOnly() {
+    const all = [...document.querySelectorAll("h1,h2,h3,h4,p,span,a,div")];
+    const matches = all.filter(el => {
+      const t = norm(el.textContent);
+      return t === "تابلو بوم مخمل" || t === "تابلو بوم";
+    }).sort((a,b) => norm(a.textContent).length - norm(b.textContent).length);
+    const target = matches[0];
+    if (!target) return;
+    let node = target;
+    for (let depth = 0; node && depth < 8; depth++, node = node.parentElement) {
+      if (depth > 0 && node.matches && node.matches("a,article,li,[class*='card'],[class*='category'],[class*='product']")) {
+        const img = node.querySelector("img");
+        if (img) {
+          img.src = photos["تابلو بوم مخمل"];
+          img.removeAttribute("srcset");
+          img.style.objectFit = "cover";
+          img.alt = "تابلو بوم مخمل نصب‌شده روی دیوار";
+          return;
+        }
+        node.style.backgroundImage = 'url("' + photos["تابلو بوم مخمل"] + '")';
+        node.style.backgroundSize = "cover";
+        node.style.backgroundPosition = "center";
+        return;
+      }
+    }
+  }
   function apply() {
     for (const [label, src] of Object.entries(photos)) {
       const candidates = [...document.querySelectorAll("h1,h2,h3,h4,p,span,a,div")].filter(el => norm(el.textContent) === norm(label));
@@ -34,7 +60,7 @@
       }
     }
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", apply); else apply();
-  setTimeout(apply, 900);
-  setTimeout(apply, 2200);
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", applyCanvasOnly); else applyCanvasOnly();
+  setTimeout(applyCanvasOnly, 900);
+  setTimeout(applyCanvasOnly, 2200);
 })();
