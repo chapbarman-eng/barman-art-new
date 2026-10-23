@@ -1,0 +1,41 @@
+name: Apply category photos to homepage
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-category-photos.yml'
+      - 'category-images.js'
+permissions:
+  contents: write
+jobs:
+  inject:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add category photo script without replacing the site design
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("index.html")
+          html = p.read_text(encoding="utf-8")
+          tag = '<script src="./category-images.js" defer></script>'
+          if tag not in html:
+              marker = "</body>"
+              pos = html.lower().rfind(marker)
+              if pos < 0:
+                  raise SystemExit("Could not safely locate </body>; leaving homepage unchanged.")
+              html = html[:pos] + tag + "\n" + html[pos:]
+              p.write_text(html, encoding="utf-8")
+          PY
+      - name: Commit and push homepage injection
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "Homepage already includes category photo script."
+          else
+            git commit -m "Connect real category photos to homepage"
+            git push
+          fi
