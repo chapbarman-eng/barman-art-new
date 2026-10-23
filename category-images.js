@@ -10,44 +10,37 @@
     "کاغذ دیواری به صورت شیت پوستر": "https://res.cloudinary.com/gimmersta-wallpaper/image/upload/c_fill%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_1200%2Ch_1200/v1731072527/cronos-ha/pages/paper-types/PandS_sample.jpg"
   };
   const norm = s => (s || "").replace(/[\\u200c\\u200f\\u202a-\\u202e]/g, "").replace(/\\s+/g, " ").trim();
-  function applyCanvasOnly() {
-    const label = "تابلو بوم مخمل";
-    const elements = [...document.querySelectorAll("h1,h2,h3,h4,h5,p,span,a,div,button,strong")];
-    const candidates = elements
-      .filter(el => norm(el.textContent) === label)
-      .sort((a, b) => (a.children.length - b.children.length) || (norm(a.textContent).length - norm(b.textContent).length));
-    let title = candidates[0];
-    if (!title) {
-      title = elements.filter(el => norm(el.textContent).includes(label))
-        .sort((a, b) => norm(a.textContent).length - norm(b.textContent).length)[0];
-    }
-    if (!title) return;
-    let node = title;
-    for (let depth = 0; node && depth < 12; depth++, node = node.parentElement) {
-      const imgs = node.querySelectorAll ? [...node.querySelectorAll("img")] : [];
-      if (imgs.length) {
-        const img = imgs[0];
-        img.setAttribute("src", photos[label]);
-        img.removeAttribute("srcset");
-        img.removeAttribute("data-srcset");
-        img.setAttribute("alt", "تابلو بوم مخمل نصب‌شده روی دیوار");
-        img.style.objectFit = "cover";
-        img.style.objectPosition = "center";
-        return;
-      }
-    }
-    // Fallback: if the category card uses a CSS background instead of an img.
-    node = title;
-    for (let depth = 0; node && depth < 8; depth++, node = node.parentElement) {
-      if (depth >= 2) {
-        node.style.backgroundImage = 'url("' + photos[label] + '")';
-        node.style.backgroundSize = "cover";
-        node.style.backgroundPosition = "center";
-        return;
+  function applyAll() {
+    for (const [label, src] of Object.entries(photos)) {
+      const els = [...document.querySelectorAll("h1,h2,h3,h4,h5,p,span,a,div,button,strong,figcaption")];
+      const matches = els.filter(el => norm(el.textContent) === norm(label))
+        .sort((a,b) => a.children.length-b.children.length || norm(a.textContent).length-norm(b.textContent).length);
+      const title = matches[0] || els.filter(el => norm(el.textContent).includes(norm(label)))
+        .sort((a,b)=>norm(a.textContent).length-norm(b.textContent).length)[0];
+      if (!title) continue;
+      let node = title;
+      for (let depth=0; node && depth<12; depth++, node=node.parentElement) {
+        const imgs = node.querySelectorAll ? [...node.querySelectorAll("img")] : [];
+        if (imgs.length) {
+          const img = imgs[0];
+          img.setAttribute("src", src);
+          img.removeAttribute("srcset");
+          img.removeAttribute("data-src");
+          img.removeAttribute("data-srcset");
+          img.alt = label;
+          img.style.objectFit = "cover";
+          img.style.objectPosition = "center";
+          break;
+        }
+        if (depth>=2 && node.style) {
+          node.style.backgroundImage = 'url("' + src + '")';
+          node.style.backgroundSize = "cover";
+          node.style.backgroundPosition = "center";
+        }
       }
     }
   }
-  const run = () => { applyCanvasOnly(); setTimeout(applyCanvasOnly, 500); setTimeout(applyCanvasOnly, 1600); };
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run); else run();
-  new MutationObserver(() => applyCanvasOnly()).observe(document.documentElement, {childList:true,subtree:true});
+  const run = () => { applyAll(); setTimeout(applyAll,700); setTimeout(applyAll,1800); };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded",run); else run();
+  new MutationObserver(() => applyAll()).observe(document.documentElement,{childList:true,subtree:true});
 })();
