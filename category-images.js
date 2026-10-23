@@ -9,58 +9,45 @@
     "پوستر دیواری بک‌لایت": "https://s.alicdn.com/@sc04/kf/H4b1098a28f304e83b2c6fdf0a688ff4d5/A0-Size-Aluminum-Frame-Magnetic-Pull-Sliding-Poster-Lightbox-for-Cinema-Movie-Display-Retail-Store-Advertising-Easy-Change-LED.png",
     "کاغذ دیواری به صورت شیت پوستر": "https://res.cloudinary.com/gimmersta-wallpaper/image/upload/c_fill%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_1200%2Ch_1200/v1731072527/cronos-ha/pages/paper-types/PandS_sample.jpg"
   };
-  const norm = s => (s || "").replace(/\u200c/g, " ").replace(/\s+/g, " ").trim();
+  const norm = s => (s || "").replace(/[\\u200c\\u200f\\u202a-\\u202e]/g, "").replace(/\\s+/g, " ").trim();
   function applyCanvasOnly() {
-    const all = [...document.querySelectorAll("h1,h2,h3,h4,p,span,a,div")];
-    const matches = all.filter(el => {
-      const t = norm(el.textContent);
-      return t === "تابلو بوم مخمل" || t === "تابلو بوم";
-    }).sort((a,b) => norm(a.textContent).length - norm(b.textContent).length);
-    const target = matches[0];
-    if (!target) return;
-    let node = target;
+    const label = "تابلو بوم مخمل";
+    const elements = [...document.querySelectorAll("h1,h2,h3,h4,h5,p,span,a,div,button,strong")];
+    const candidates = elements
+      .filter(el => norm(el.textContent) === label)
+      .sort((a, b) => (a.children.length - b.children.length) || (norm(a.textContent).length - norm(b.textContent).length));
+    let title = candidates[0];
+    if (!title) {
+      title = elements.filter(el => norm(el.textContent).includes(label))
+        .sort((a, b) => norm(a.textContent).length - norm(b.textContent).length)[0];
+    }
+    if (!title) return;
+    let node = title;
+    for (let depth = 0; node && depth < 12; depth++, node = node.parentElement) {
+      const imgs = node.querySelectorAll ? [...node.querySelectorAll("img")] : [];
+      if (imgs.length) {
+        const img = imgs[0];
+        img.setAttribute("src", photos[label]);
+        img.removeAttribute("srcset");
+        img.removeAttribute("data-srcset");
+        img.setAttribute("alt", "تابلو بوم مخمل نصب‌شده روی دیوار");
+        img.style.objectFit = "cover";
+        img.style.objectPosition = "center";
+        return;
+      }
+    }
+    // Fallback: if the category card uses a CSS background instead of an img.
+    node = title;
     for (let depth = 0; node && depth < 8; depth++, node = node.parentElement) {
-      if (depth > 0 && node.matches && node.matches("a,article,li,[class*='card'],[class*='category'],[class*='product']")) {
-        const img = node.querySelector("img");
-        if (img) {
-          img.src = photos["تابلو بوم مخمل"];
-          img.removeAttribute("srcset");
-          img.style.objectFit = "cover";
-          img.alt = "تابلو بوم مخمل نصب‌شده روی دیوار";
-          return;
-        }
-        node.style.backgroundImage = 'url("' + photos["تابلو بوم مخمل"] + '")';
+      if (depth >= 2) {
+        node.style.backgroundImage = 'url("' + photos[label] + '")';
         node.style.backgroundSize = "cover";
         node.style.backgroundPosition = "center";
         return;
       }
     }
   }
-  function apply() {
-    for (const [label, src] of Object.entries(photos)) {
-      const candidates = [...document.querySelectorAll("h1,h2,h3,h4,p,span,a,div")].filter(el => norm(el.textContent) === norm(label));
-      const target = candidates.find(el => ![...el.children].some(ch => norm(ch.textContent) === norm(label))) || candidates[0];
-      if (!target) continue;
-      let node = target;
-      for (let depth = 0; node && depth < 9; depth++, node = node.parentElement) {
-        const img = node.querySelector && node.querySelector("img");
-        if (img) {
-          img.src = src;
-          img.removeAttribute("srcset");
-          img.loading = "lazy";
-          img.style.objectFit = "cover";
-          img.alt = label + "؛ تصویر واقعی مرتبط با محصول";
-          break;
-        }
-        if (depth >= 1 && node.matches && node.matches("a,article,li,[class*='card'],[class*='category'],[class*='product']")) {
-          node.style.backgroundImage = 'url("' + src + '")';
-          node.style.backgroundSize = "cover";
-          node.style.backgroundPosition = "center";
-        }
-      }
-    }
-  }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", applyCanvasOnly); else applyCanvasOnly();
-  setTimeout(applyCanvasOnly, 900);
-  setTimeout(applyCanvasOnly, 2200);
+  const run = () => { applyCanvasOnly(); setTimeout(applyCanvasOnly, 500); setTimeout(applyCanvasOnly, 1600); };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run); else run();
+  new MutationObserver(() => applyCanvasOnly()).observe(document.documentElement, {childList:true,subtree:true});
 })();
