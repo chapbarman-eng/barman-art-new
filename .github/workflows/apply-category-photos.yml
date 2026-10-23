@@ -12,21 +12,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Add category photo script without replacing the site design
+      - name: Refresh homepage photo script and bypass browser cache
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import os, re
           p = Path("index.html")
           html = p.read_text(encoding="utf-8")
-          tag = '<script src="./category-images.js" defer></script>'
-          if tag not in html:
+          tag = '<script src="./category-images.js?v=' + os.environ.get("GITHUB_SHA", "latest") + '" defer></script>'
+          html, count = re.subn(r'<script\\b[^>]*src=["\'][^"\']*category-images\\.js[^"\']*["\'][^>]*></script>', tag, html, flags=re.I)
+          if count == 0:
               marker = "</body>"
               pos = html.lower().rfind(marker)
               if pos < 0:
                   raise SystemExit("Could not safely locate </body>; leaving homepage unchanged.")
-              html = html[:pos] + tag + "\n" + html[pos:]
-              p.write_text(html, encoding="utf-8")
+              html = html[:pos] + tag + "\\n" + html[pos:]
+          p.write_text(html, encoding="utf-8")
           PY
       - name: Commit and push homepage injection
         run: |
@@ -34,8 +36,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           if git diff --cached --quiet; then
-            echo "Homepage already includes category photo script."
+            echo "Homepage script already refreshed."
           else
-            git commit -m "Connect real category photos to homepage"
+            git commit -m "Refresh category image script cache version"
             git push
           fi
