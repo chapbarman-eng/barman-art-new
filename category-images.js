@@ -9,38 +9,36 @@
     "پوستر دیواری بک‌لایت": "https://s.alicdn.com/@sc04/kf/H4b1098a28f304e83b2c6fdf0a688ff4d5/A0-Size-Aluminum-Frame-Magnetic-Pull-Sliding-Poster-Lightbox-for-Cinema-Movie-Display-Retail-Store-Advertising-Easy-Change-LED.png",
     "کاغذ دیواری به صورت شیت پوستر": "https://res.cloudinary.com/gimmersta-wallpaper/image/upload/c_fill%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_1200%2Ch_1200/v1731072527/cronos-ha/pages/paper-types/PandS_sample.jpg"
   };
-  const norm = s => (s || "").replace(/[\\u200c\\u200f\\u202a-\\u202e]/g, "").replace(/\\s+/g, " ").trim();
+  const norm = s => (s || "").normalize("NFC").replace(/[\u200c\u200f\u202a-\u202e]/g, "").replace(/\s+/g, " ").trim();
   function applyAll() {
+    const all = [...document.querySelectorAll("h1,h2,h3,h4,h5,p,span,a,div,button,strong,figcaption")];
     for (const [label, src] of Object.entries(photos)) {
-      const els = [...document.querySelectorAll("h1,h2,h3,h4,h5,p,span,a,div,button,strong,figcaption")];
-      const matches = els.filter(el => norm(el.textContent) === norm(label))
-        .sort((a,b) => a.children.length-b.children.length || norm(a.textContent).length-norm(b.textContent).length);
-      const title = matches[0] || els.filter(el => norm(el.textContent).includes(norm(label)))
-        .sort((a,b)=>norm(a.textContent).length-norm(b.textContent).length)[0];
+      const target = norm(label);
+      const matches = all.filter(el => norm(el.textContent) === target && el.children.length < 3)
+        .sort((a,b) => norm(a.textContent).length - norm(b.textContent).length);
+      const title = matches[0] || all.filter(el => norm(el.textContent).includes(target))
+        .sort((a,b) => norm(a.textContent).length - norm(b.textContent).length)[0];
       if (!title) continue;
-      let node = title;
-      for (let depth=0; node && depth<12; depth++, node=node.parentElement) {
-        const imgs = node.querySelectorAll ? [...node.querySelectorAll("img")] : [];
-        if (imgs.length) {
-          const img = imgs[0];
-          img.setAttribute("src", src);
-          img.removeAttribute("srcset");
-          img.removeAttribute("data-src");
-          img.removeAttribute("data-srcset");
-          img.alt = label;
-          img.style.objectFit = "cover";
-          img.style.objectPosition = "center";
+      let card = title;
+      for (let i=0; card && i<8; i++, card=card.parentElement) {
+        const img = card.querySelector && card.querySelector("img");
+        if (img) {
+          if (img.dataset.barmanCategoryImage !== target) {
+            img.src = src; img.removeAttribute("srcset"); img.removeAttribute("data-src");
+            img.alt = label; img.loading = "eager"; img.style.objectFit = "cover";
+            img.style.objectPosition = "center"; img.dataset.barmanCategoryImage = target;
+          }
           break;
         }
-        if (depth>=2 && node.style) {
-          node.style.backgroundImage = 'url("' + src + '")';
-          node.style.backgroundSize = "cover";
-          node.style.backgroundPosition = "center";
+        if (i >= 2 && card.matches && card.matches("a,article,li,[class*='card'],[class*='category'],[class*='item']")) {
+          card.style.backgroundImage = 'url("' + src + '")';
+          card.style.backgroundSize = "cover"; card.style.backgroundPosition = "center";
+          break;
         }
       }
     }
   }
-  const run = () => { applyAll(); setTimeout(applyAll,700); setTimeout(applyAll,1800); };
+  const run = () => { applyAll(); [500,1200,2500,5000].forEach(t => setTimeout(applyAll,t)); };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded",run); else run();
   new MutationObserver(() => applyAll()).observe(document.documentElement,{childList:true,subtree:true});
 })();
