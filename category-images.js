@@ -1,6 +1,6 @@
 (() => {
   const photos = {
-    "تابلو بوم مخمل": "https://dkstatics-public.digikala.com/digikala-products/c6cf22996cacd3ae3fa535e4b3a4193b463e8430_1689842344.jpg?x-oss-process=image%2Fresize%2Cm_lfit%2Ch_800%2Cw_800%2Fquality%2Cq_90",
+    "تابلو بوم مخمل": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85",
     "پوستر پارچه‌ای": "https://www.bilderwelten.it/img/635/635/resize/s/t/strasse_in_procida_psbwb-p_aoa12_34.jpg",
     "استیکر پشت‌چسب‌دار": "https://d3v85gmohv94ja.cloudfront.net/images/opt/contentimages/images/baskimo_kendinden_yapiskanli_folyo_baski_.jpg.webp?v=1260",
     "پوستر دیواری فتوگلاسه": "https://www.goodvinilos.com/6849-large_default/mural-de-pared-arboles-en-otono.jpg",
